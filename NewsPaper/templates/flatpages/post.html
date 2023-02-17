@@ -9,8 +9,13 @@
 {% block content %}
 Добавлено: {{ post.dateCreation|date:"d M Y в G:i"}}
 <p>Рейтинг: {{ post.rating }}</p>
-Автор: {{ post.author }}
+
+<p>{{ post.categoryType }}</p>
+{% for cat in post.postCategory.all %}
+                   {{ cat.name }}
+                   {% endfor %}
 <hr>
 <h1>{{ post.title}}</h1>
 <h1>{{ post.text|censor }}</h1>
+<p>Автор: {{ post.author }}</p>
 {% endblock content %}

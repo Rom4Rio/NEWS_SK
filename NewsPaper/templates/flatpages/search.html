@@ -4,13 +4,18 @@
 {% load custom_tags %}
 
 {% block title %}
-NEWS
+Search
 {% endblock title %}
 
 {% block content %}
-   <h1>Все новости</h1>
+   <h1>Все Новости</h1>
+
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+   </form>
  <hr>
-   {% if news %}
+   {% if search %}
        <table>
            <tr>
                <td> Дата публикации </td>
@@ -19,7 +24,7 @@ NEWS
                <td> Тип </td>
                <td> Категория </td>
            </tr>
-           {% for post in news %}
+           {% for post in search %}
            <tr>
               <td>{{ post.dateCreation|date:"d M Y в G:i" }}</td>
                <td>{{ post.title }}</td>
@@ -36,7 +41,7 @@ NEWS
        <h2>Новостей нет!</h2>
    {% endif %}
 
-        {% if page_obj.has_previous %}
+   {% if page_obj.has_previous %}
        {# Для каждой ссылки пагинации указываем обработку через новый тег #}
        <a href="?{% url_replace page=1 %}">1</a>
        {% if page_obj.previous_page_number != 1 %}
