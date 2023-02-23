@@ -17,5 +17,5 @@ class NewsFilter(FilterSet):
         model = Post
         fields = {
             'title': ['icontains'],
-            'categoryType': ['icontains'],
+            'postCategory': ['icontains'],
         }

@@ -18,6 +18,9 @@ NEWS
                <td> Превью </td>
                <td> Тип </td>
                <td> Категория </td>
+               {% if perms.news.change_post or perms.news.delete_post %}
+                <td>Действия</td>
+                {% endif %}
            </tr>
            {% for post in news %}
            <tr>
@@ -29,6 +32,15 @@ NEWS
                    {{ cat.name }}
                    {% endfor %}
                </td>
+               <td>
+
+                    {% if perms.news.change_post %}
+                    <a href="{% url 'post_edit' pk=post.id %}">Изменить</a>
+                    {% endif %}
+                    {% if perms.news.delete_post %}
+                    <a href="{% url 'post_delete' post.id %}">Удалить</a>
+                    {% endif %}
+               </td>
            </tr>
            {% endfor %}
        </table>
@@ -37,7 +49,6 @@ NEWS
    {% endif %}
 
         {% if page_obj.has_previous %}
-       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
        <a href="?{% url_replace page=1 %}">1</a>
        {% if page_obj.previous_page_number != 1 %}
            ...
