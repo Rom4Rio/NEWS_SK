@@ -10,7 +10,10 @@ NEWS
 {% block content %}
    <h1>Все новости</h1>
  <hr>
-   {% if news %}
+    {% if is_not_subscriber %}
+    <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
+    {% endif %}
+   {% if category_news_list %}
        <table>
            <tr>
                <td> Дата публикации </td>
@@ -22,23 +25,22 @@ NEWS
                 <td>Действия</td>
                 {% endif %}
            </tr>
-           {% for post in news %}
+           {% for post in category_news_list %}
            <tr>
               <td>{{ post.dateCreation|date:"d M Y в G:i" }}</td>
                <td>{{ post.title }}</td>
                <td>{{ post.text|truncatechars:20|censor }}</td>
                <td>{{ post.categoryType }}</td>
                <td>
-                   {% for category in post.postCategory.all %}
-                   <a href="{% url 'category_list' category.id %}">{{ category.name }}</a>
+                   {% for cat in post.postCategory.all %}
+                   <a href="{% url 'category_list' category.id %}">{{ cat.name }}</a>
                    {% endfor %}
                </td>
                <td>
-
-                    {% if perms.news.change_post %}
+                    {% if perms.category_news_list.change_post %}
                     <a href="{% url 'post_edit' pk=post.id %}">Изменить</a>
                     {% endif %}
-                    {% if perms.news.delete_post %}
+                    {% if perms.category_news_list.delete_post %}
                     <a href="{% url 'post_delete' post.id %}">Удалить</a>
                     {% endif %}
                </td>
