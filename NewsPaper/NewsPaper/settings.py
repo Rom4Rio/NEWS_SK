@@ -169,3 +169,9 @@ MANAGERS =(
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_BROKER_URL = 'redis://default:JHKM3F0qRdEhlgpXmswv3mLUx0MbJ820@redis-12763.c55.eu-central-1-1.ec2.cloud.redislabs.com:12763'
+CELERY_RESULT_BACKEND = 'redis://default:JHKM3F0qRdEhlgpXmswv3mLUx0MbJ820@redis-12763.c55.eu-central-1-1.ec2.cloud.redislabs.com:12763'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
