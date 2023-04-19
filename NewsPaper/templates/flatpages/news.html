@@ -3,10 +3,10 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
+
 {% block title %}
 NEWS
 {% endblock title %}
-
 {% block content %}
    <h1>Все новости</h1>
  <hr>
@@ -22,6 +22,7 @@ NEWS
                 <td>Действия</td>
                 {% endif %}
            </tr>
+
            {% for post in news %}
            <tr>
               <td>{{ post.dateCreation|date:"d M Y в G:i" }}</td>

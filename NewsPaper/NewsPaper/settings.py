@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,6 +59,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -86,7 +88,13 @@ AUTHENTICATION_BACKENDS = [
 ]
 WSGI_APPLICATION = 'NewsPaper.wsgi.application'
 
-
+CACHES = {
+    'default': {
+        'TIMEOUT': 60,
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -163,15 +171,127 @@ DEFAULT_FROM_EMAIL = "testSK1337@yandex.ru"
 
 SERVER_EMAIL = "testSK1337@yandex.ru"
 
-MANAGERS =(
+MANAGERS = [
     ('Roman', 'roman_alekseev_01@mail.ru'),
-    )
+    ]
+
+ADMINS = [
+    ('Roman', 'romanalekseev2001@yandex.ru'),
+    ]
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
-CELERY_BROKER_URL = 'redis://default:JHKM3F0qRdEhlgpXmswv3mLUx0MbJ820@redis-12763.c55.eu-central-1-1.ec2.cloud.redislabs.com:12763'
-CELERY_RESULT_BACKEND = 'redis://default:JHKM3F0qRdEhlgpXmswv3mLUx0MbJ820@redis-12763.c55.eu-central-1-1.ec2.cloud.redislabs.com:12763'
+CELERY_BROKER_URL = 'redis://default:3pnlemhhNkkS0tXMGtQZiDf2LN08wTpL@redis-19291.c293.eu-central-1-1.ec2.cloud.redislabs.com:1929'
+CELERY_RESULT_BACKEND = 'redis://default:3pnlemhhNkkS0tXMGtQZiDf2LN08wTpL@redis-19291.c293.eu-central-1-1.ec2.cloud.redislabs.com:1929'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_logger': False,
+    'formatters': {
+        'info': {
+            'format': '{asctime} {levelname} {message}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+        'warning': {
+            'format': '{asctime} {levelname} {message} {pathname}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+        'error': {
+            'format': '{asctime} {levelname} {message} {pathname} {exc_info}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+        'info_log': {
+            'format': '{asctime} {levelname} {module} {message}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+        'error_log': {
+            'format': '{asctime} {levelname} {message} {pathname} {exc_info}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+        'security_log': {
+            'format': '{asctime} {levelname} {module} {message}',
+            'datetime': '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console_inf': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'info',
+        },
+        'console_war': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
+            'formatter': 'warning',
+        },
+        'console_error': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'error',
+        },
+        'log_inf': {
+            'level': 'INFO',
+            'filters': 'debug_off',
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'info_log',
+        },
+        'log_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'formatter': 'error_log',
+        },
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["debug_off"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
+        'security': {
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+        },
+    },
+    'filters': {
+        'debug_off': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console_inf', 'console_war', 'console_error', 'log_inf'],
+            'level': 'DEBUG'
+        },
+        'django.request': {
+            'handlers': ['log_error', 'mail_admins'],
+            'level': 'ERROR'
+        },
+        'django.server': {
+            'handlers': ['log_error', 'mail_admins'],
+            'level': 'ERROR'
+        },
+        'django.template': {
+            'handlers': ['log_error'],
+            'level': 'ERROR'
+        },
+        'django.db.backends': {
+            'handlers': ['log_error'],
+            'level': 'ERROR'
+        },
+        'django.security': {
+            'handlers': ['security'],
+            'propagate': False,
+        },
+    },
+}
+

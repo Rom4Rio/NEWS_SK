@@ -5,17 +5,19 @@
 {% block title %}
 Публикация
 {% endblock title %}
+{% load cache %}
+{% cache 30 post %}
+    {% block content %}
+    Добавлено: {{ post.dateCreation|date:"d M Y в G:i"}}
+        <p>Рейтинг: {{ post.rating }}</p>
 
-{% block content %}
-Добавлено: {{ post.dateCreation|date:"d M Y в G:i"}}
-<p>Рейтинг: {{ post.rating }}</p>
-
-<p>{{ post.categoryType }}</p>
-{% for cat in post.postCategory.all %}
-                   {{ cat.name }}
-                   {% endfor %}
-<hr>
-<h1>{{ post.title}}</h1>
-<h1>{{ post.text|censor }}</h1>
-<p>Автор: {{ post.author }}</p>
-{% endblock content %}
+        <p>{{ post.categoryType }}</p>
+        {% for cat in post.postCategory.all %}
+                        {{ cat.name }}
+                         {% endfor %}
+        <hr>
+        <h1>{{ post.title}}</h1>
+        <h1>{{ post.text|censor }}</h1>
+        <p>Автор: {{ post.author }}</p>
+    {% endblock content %}
+{% endcache %}
